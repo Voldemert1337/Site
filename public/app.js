@@ -330,12 +330,18 @@ function initScrollSpy() {
 
 function initFaqAccordion() {
   const faqItems = document.querySelectorAll(".faq-item");
-  faqItems.forEach((item) => {
+  console.log(`[FAQ] Найдено ${faqItems.length} аккордеонов.`);
+  faqItems.forEach((item, index) => {
     const question = item.querySelector(".faq-question");
     const answer = item.querySelector(".faq-answer");
-    if (!question || !answer) return;
+    if (!question || !answer) {
+      console.warn(`[FAQ] Элементы вопроса или ответа не найдены в блоке ${index}`);
+      return;
+    }
 
-    question.addEventListener("click", () => {
+    question.addEventListener("click", (e) => {
+      e.preventDefault();
+      console.log(`[FAQ] Клик по вопросу ${index}`);
       const isActive = item.classList.contains("active");
 
       // Закрываем другие элементы аккордеона
@@ -351,32 +357,17 @@ function initFaqAccordion() {
       if (isActive) {
         item.classList.remove("active");
         answer.style.maxHeight = null;
+        console.log(`[FAQ] Закрыт вопрос ${index}`);
       } else {
         item.classList.add("active");
         answer.style.maxHeight = answer.scrollHeight + "px";
+        console.log(`[FAQ] Открыт вопрос ${index}, высота: ${answer.scrollHeight}px`);
       }
     });
   });
 }
 
-// ---- Загрузка данных ----
-(async () => {
-  try {
-    state.motos = await api("/api/motos");
-    renderCatalog();
-    setupPhoneMask();
-    animateHeadline();
-    await loadReviews();
-    initReviews();
-    
-    // Инициализация новой интерактивной логики
-    initHeaderScroll();
-    initScrollSpy();
-    initFaqAccordion();
-  } catch (e) {
-    console.error(e);
-  }
-})();
+// Redundant data loader block removed to prevent double event listeners registration
 
 // ---- Новые интерактивные функции (Калькулятор, Reveal, Звезды) ----
 function setupCalculator() {
@@ -489,23 +480,36 @@ function initStarRating() {
 }
 
 // ---- Загрузка данных ----
+function safeInit(name, fn) {
+  try {
+    fn();
+  } catch (e) {
+    console.error(`Ошибка инициализации ${name}:`, e);
+  }
+}
+
 (async () => {
   try {
     state.motos = await api("/api/motos");
     renderCatalog();
-    setupPhoneMask();
-    animateHeadline();
-    await loadReviews();
-    initReviews();
-    
-    // Инициализация новой интерактивной логики
-    initHeaderScroll();
-    initScrollSpy();
-    initFaqAccordion();
-    setupCalculator();
-    initScrollReveal();
-    initStarRating();
   } catch (e) {
-    console.error(e);
+    console.error("Ошибка загрузки мотоциклов:", e);
   }
+  
+  safeInit("PhoneMask", setupPhoneMask);
+  safeInit("HeadlineAnimation", animateHeadline);
+  
+  try {
+    await loadReviews();
+  } catch (e) {
+    console.error("Ошибка загрузки отзывов:", e);
+  }
+  
+  safeInit("Reviews", initReviews);
+  safeInit("HeaderScroll", initHeaderScroll);
+  safeInit("ScrollSpy", initScrollSpy);
+  safeInit("FaqAccordion", initFaqAccordion);
+  safeInit("Calculator", setupCalculator);
+  safeInit("ScrollReveal", initScrollReveal);
+  safeInit("StarRating", initStarRating);
 })();
