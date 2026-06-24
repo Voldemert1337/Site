@@ -586,35 +586,45 @@ dialog::backdrop {
   display: block;
   transition: opacity 0.15s ease-in-out;
 }
-  object-fit: cover;
-  display: block;
-  transition: opacity 0.4s ease;
-}
 .dialog-gallery .gallery-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0,0,0,0.6);
-  border: none;
-  color: #fff;
-  font-size: 30px;
-  padding: 10px 16px;
+  background: rgba(18, 18, 18, 0.65);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  width: 40px;
+  height: 40px;
   cursor: pointer;
   border-radius: 50%;
-  transition: 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 2;
-}
-.dialog-gallery .gallery-nav:hover { background: var(--red); }
-.dialog-gallery .prev { left: 10px; }
-.dialog-gallery .next { right: 10px; }
-.dialog-gallery .dots {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
-  gap: 8px;
-  z-index: 2;
+  align-items: center;
+  justify-content: center;
+}
+.dialog-gallery .gallery-nav svg {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.2s ease;
+}
+.dialog-gallery .gallery-nav:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(227, 6, 19, 0.4);
+}
+.dialog-gallery .prev:hover svg {
+  transform: translateX(-2px);
+}
+.dialog-gallery .next:hover svg {
+  transform: translateX(2px);
+}
+.dialog-gallery .prev { left: 15px; }
+.dialog-gallery .next { right: 15px; }
+.dialog-gallery .dots {
+  display: none;
 }
 .dialog-gallery .dots span {
   width: 10px;

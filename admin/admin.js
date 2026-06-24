@@ -43,7 +43,7 @@ function getFilteredLeads() {
       const model = (lead.model || "").toLowerCase();
       if (!name.includes(search) && !phone.includes(search) && !msg.includes(search) && !model.includes(search)) return false;
     }
-    if (type && lead.type !== type) return false;
+    if (type && (lead.type || "").replace(/\u2011/g, "-") !== type.replace(/\u2011/g, "-")) return false;
     if (status && lead.status !== status) return false;
     if (from || to) {
       const created = lead.created_at ? new Date(lead.created_at) : null;
