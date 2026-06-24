@@ -1,0 +1,30 @@
+{
+  "motos": [],
+  "leads": [
+    {
+      "id": "1782296068392",
+      "name": "Иван",
+      "phone": "78568654352",
+      "model": "Motoland Trip 250",
+      "type": "Trade‑in",
+      "message": "12",
+      "status": "Новая",
+      "created_at": "2026-06-24T10:14:28.392Z"
+    },
+    {
+      "id": "1782295617165",
+      "name": "вадим",
+      "phone": "74564565464",
+      "model": "Motoland XT 250",
+      "type": "Тест-драйв",
+      "message": "12",
+      "status": "Новая",
+      "created_at": "2026-06-24T10:06:57.165Z"
+    }
+  ],
+  "reviews": [],
+  "hiddenMotoIds": [
+    "scrambler-250",
+    "xr-250"
+  ]
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOTOLAND Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/control/assets/admin.css">
+</head>
+<body class="login-page">
+  <form class="login-card" id="loginForm">
+    <span class="eyebrow">MOTOLAND Control</span>
+    <h1>Админ панель</h1>
+    <p>Адрес админ панели не показывается на публичном сайте. Доступ только по логину и паролю.</p>
+    <div class="alert" id="alert"></div>
+    <label>Логин<input name="login" autocomplete="username" value="admin"></label>
+    <label>Пароль<input name="password" type="password" autocomplete="current-password" value="admin123"></label>
+    <button type="submit">Войти</button>
+  </form>
+  <script>
+    async function api(path, options) {
+      const res = await fetch(path, {
+        headers: { "Content-Type": "application/json" },
+        ...options
+      });
+      if (!res.ok) throw new Error((await res.json()).error || "Ошибка входа");
+      return res.json();
+    }
+    document.querySelector("#loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const alert = document.querySelector("#alert");
+      alert.classList.remove("show");
+      try {
+        await api("/api/admin/login", {
+          method: "POST",
+          body: JSON.stringify(Object.fromEntries(new FormData(e.currentTarget)))
+        });
+        location.href = "/control/panel";
+      } catch (error) {
+        alert.textContent = error.message;
+        alert.classList.add("show");
+      }
+    });
+  </script>
+</body>
+</html>

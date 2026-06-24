@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOTOLAND Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/control/assets/admin.css" />
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/control/panel">MOTO<span>LAND</span></a>
+    <button class="tab active" data-view="leads">Заявки</button>
+    <button class="tab" data-view="motos">Каталог</button>
+    <button class="tab" data-view="newMoto">Новая модель</button>
+    <button class="tab" data-view="reviews">Отзывы</button>
+    <button class="logout" id="logout">Выйти</button>
+  </aside>
+  <main class="workspace">
+    <header class="workspace-head">
+      <div><span class="eyebrow">CRM</span><h1 id="pageTitle">Заявки</h1></div>
+      <a class="open-site" href="/" target="_blank">Открыть сайт</a>
+    </header>
+    <div class="toast" id="toast"></div>
+
+    <section class="view active" id="view-leads">
+      <div class="cards" id="leadStats"></div>
+      <div class="filter-bar">
+        <div class="filter-grid">
+          <label>Поиск
+            <input type="text" id="filter-search" placeholder="Имя, телефон, текст...">
+          </label>
+          <label>Тип заявки
+            <select id="filter-type">
+              <option value="">Все типы</option>
+              <option value="Тест-драйв">Тест-драйв</option>
+              <option value="Кредит">Кредит</option>
+              <option value="Консультация">Консультация</option>
+              <option value="Trade-in">Trade-in</option>
+              <option value="Сервис">Сервис</option>
+            </select>
+          </label>
+          <label>Статус
+            <select id="filter-status">
+              <option value="">Все статусы</option>
+              <option value="Новая">Новая</option>
+              <option value="В работе">В работе</option>
+              <option value="Завершена">Завершена</option>
+            </select>
+          </label>
+          <label>Дата с
+            <input type="date" id="filter-date-from">
+          </label>
+          <label>Дата по
+            <input type="date" id="filter-date-to">
+          </label>
+          <div class="actions">
+            <button type="button" id="filter-reset" class="danger">Сбросить</button>
+            <button type="button" id="export-excel" class="green-btn">В Excel</button>
+          </div>
+        </div>
+      </div>
+      <div class="table" id="leads"></div>
+    </section>
+
+    <section class="view" id="view-motos">
+      <div class="table" id="motos"></div>
+    </section>
+
+    <section class="view" id="view-newMoto">
+      <form class="editor" id="motoForm" enctype="multipart/form-data">
+        <label>Название<input name="name" placeholder="XR 300" required></label>
+        <label>Категория
+          <select name="category" required>
+            <option value="enduro">Эндуро</option>
+            <option value="naked">Нейкед</option>
+            <option value="touring">Туризм</option>
+            <option value="sport">Спорт</option>
+            <option value="classic">Классика</option>
+          </select>
+        </label>
+        <label>Бейдж<input name="badge" placeholder="Новинка"></label>
+        <label>Цена <input name="price" type="number" placeholder="299900" required></label>
+        <label>Старая цена<input name="old_price" type="number" placeholder="329900"></label>
+        <label>Объем<input name="engine" placeholder="300 cc" required></label>
+        <label>Мощность<input name="power" placeholder="28 л.с." required></label>
+        <label>Масса<input name="weight" placeholder="148 кг" required></label>
+        <label>Скорость<input name="speed" placeholder="150 км/ч" required></label>
+        <label class="wide">Фотографии
+          <input type="file" name="images" multiple accept="image/*" id="imageFiles">
+          <div class="file-preview" id="filePreview"></div>
+        </label>
+        <label class="wide">Описание<textarea name="description" rows="4" required></textarea></label>
+        <button class="wide" type="submit">Добавить модель</button>
+      </form>
+    </section>
+
+    <section class="view" id="view-reviews">
+      <div style="display:flex; gap:12px; margin-bottom:16px; flex-wrap:wrap;">
+        <button class="tab active" data-filter-status="">Все</button>
+        <button class="tab" data-filter-status="pending">На модерации</button>
+        <button class="tab" data-filter-status="approved">Одобренные</button>
+        <button class="tab" data-filter-status="rejected">Отклоненные</button>
+      </div>
+      <div class="table" id="reviewsAdminList"></div>
+    </section>
+  </main>
+  <script src="/control/assets/admin.js?v=20260624"></script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOTOLAND — официальный дилер</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top">MOTO<span>LAND</span></a>
+    <nav>
+      <a href="#catalog">Каталог</a>
+      <a href="#service">Сервис</a>
+      <a href="#finance">Покупка</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <a class="header-phone" href="tel:+79001234567">+7 900 123-45-67</a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <video class="hero-video" autoplay muted loop playsinline 
+             poster="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=2200&q=88"
+             onerror="this.style.display='none'">
+        <source src="/video/hero.mp4" type="video/mp4" />
+      </video>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <p class="kicker">Официальный дилер Motoland</p>
+        <h1 class="animated-headline" id="headline">Твой первый шаг к свободе</h1>
+        <p class="lead">Подберем модель под рост, опыт и маршрут. Оформим тест-драйв, кредит, trade‑in и сервисное обслуживание в одном месте.</p>
+        <div class="hero-actions">
+          <a class="btn primary glow-btn" href="#catalog">Выбрать модель</a>
+          <a class="btn secondary" href="#contact">Записаться на тест-драйв</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <strong id="heroCount">-</strong>
+            <span>моделей в шоуруме</span>
+          </div>
+          <div>
+            <strong>12 лет</strong>
+            <span>на рынке</span>
+          </div>
+          <div>
+            <strong>500+</strong>
+            <span>выданных мотоциклов</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="catalog">
+      <div class="section-top">
+        <div>
+          <p class="kicker">Каталог</p>
+          <h2>Популярные <span class="highlight">модели</span></h2>
+        </div>
+        <div class="tools">
+          <div class="filters" id="filters"></div>
+          <select id="sort">
+            <option value="default">По умолчанию</option>
+            <option value="price-asc">Сначала дешевле</option>
+            <option value="price-desc">Сначала дороже</option>
+            <option value="name">По названию</option>
+          </select>
+        </div>
+      </div>
+      <div class="catalog-grid" id="catalogGrid"></div>
+    </section>
+
+    <section class="split" id="service">
+      <div>
+        <p class="kicker">Сервис</p>
+        <h2>Не просто продажа, а <span class="highlight">сопровождение</span> после покупки</h2>
+      </div>
+      <div class="service-list">
+        <article><b>Предпродажная подготовка</b><span>Проверка узлов, жидкостей, крепежа и электрики перед выдачей.</span></article>
+        <article><b>Регламентное ТО</b><span>Плановое обслуживание, диагностика и расходники в наличии.</span></article>
+        <article><b>Запчасти и экипировка</b><span>Помогаем подобрать защиту, кофры, резину и аксессуары.</span></article>
+      </div>
+    </section>
+
+    <section class="finance" id="finance">
+      <p class="kicker">Покупка</p>
+      <h2>Кредит, trade‑in и тест‑драйв <span class="highlight">без лишней беготни</span></h2>
+      <div class="finance-grid">
+        <div><strong>15 минут</strong><span>на предварительный расчет кредита</span></div>
+        <div><strong>0 ₽</strong><span>за консультацию и подбор модели</span></div>
+        <div><strong>Trade‑in</strong><span>оценим ваш текущий мотоцикл</span></div>
+      </div>
+    </section>
+
+    <!-- ОТЗЫВЫ -->
+    <section class="reviews" id="reviews">
+      <div class="section-top">
+        <div>
+          <p class="kicker">Отзывы</p>
+          <h2>Что говорят наши <span class="highlight">клиенты</span></h2>
+        </div>
+        <button class="btn secondary" id="openReviewForm">Оставить отзыв</button>
+      </div>
+      <div class="reviews-grid" id="reviewsGrid"></div>
+      <div class="review-form-wrapper" id="reviewFormWrapper" style="display:none;">
+        <form id="reviewForm" class="review-form">
+          <h3>Оставить отзыв</h3>
+          <label>Ваше имя
+            <input type="text" name="name" placeholder="Например, Иван" required />
+          </label>
+          <label>Оценка (1–5)
+            <select name="rating" required>
+              <option value="">Выберите</option>
+              <option value="5">5 ★</option>
+              <option value="4">4 ★</option>
+              <option value="3">3 ★</option>
+              <option value="2">2 ★</option>
+              <option value="1">1 ★</option>
+            </select>
+          </label>
+          <label class="wide">Текст отзыва
+            <textarea name="text" rows="4" placeholder="Поделитесь впечатлениями..." required></textarea>
+          </label>
+          <button class="btn primary wide" type="submit">Отправить на модерацию</button>
+          <button type="button" class="btn secondary wide" id="closeReviewForm">Отмена</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div>
+        <p class="kicker">Заявка</p>
+        <h2>Оставьте контакты, менеджер <span class="highlight">свяжется</span> с вами</h2>
+      </div>
+      <form id="leadForm" class="lead-form">
+        <div class="notice" id="notice"></div>
+        <label>Имя<input name="name" placeholder="Иван" autocomplete="name" /></label>
+        <label>Телефон<input name="phone" placeholder="+7 (___) ___-__-__" autocomplete="tel" /></label>
+        <label>Интересующая модель<select name="model" id="modelSelect"></select></label>
+        <label>Тип обращения<select name="type"><option>Консультация</option><option>Тест-драйв</option><option>Кредит</option><option>Trade‑in</option><option>Сервис</option></select></label>
+        <label class="wide">Комментарий<textarea name="message" rows="4" placeholder="Когда удобно позвонить?"></textarea></label>
+        <button class="btn primary wide" type="submit">Отправить заявку</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <span>MOTOLAND © 2026</span>
+    <span>Шоурум: Москва, Мотошоссе, 12</span>
+  </footer>
+
+  <dialog id="motoDialog">
+    <button class="dialog-close" id="closeDialog">×</button>
+    <div class="dialog-grid">
+      <div class="dialog-gallery">
+        <img id="dialogImage" alt="" />
+        <button class="gallery-nav prev">‹</button>
+        <button class="gallery-nav next">›</button>
+        <div class="dots" id="dialogDots"></div>
+      </div>
+      <div>
+        <p class="kicker" id="dialogCategory"></p>
+        <h3 id="dialogName"></h3>
+        <strong class="dialog-price" id="dialogPrice"></strong>
+        <div class="dialog-specs" id="dialogSpecs"></div>
+        <p id="dialogDesc"></p>
+        <button class="btn primary" id="dialogLead">Оставить заявку</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="https://unpkg.com/imask"></script>
+  <script type="module" src="/app.js?v=20260624"></script>
+</body>
+</html>
