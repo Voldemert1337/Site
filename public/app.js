@@ -65,6 +65,22 @@ function openMoto(id) {
   const displayImages = images.length > 0 ? images : [fallbackImage];
   const dialog = $("#motoDialog");
   dialog.dataset.images = JSON.stringify(displayImages);
+  
+  // Создаем миниатюры
+  const thumbs = $("#dialogThumbs");
+  if (thumbs) {
+    thumbs.innerHTML = displayImages.map((src, i) => `
+      <img src="${src}" data-index="${i}" class="${i === 0 ? 'active' : ''}" onerror="this.onerror=null;this.src='${fallbackImage}'">
+    `).join("");
+    
+    // Клик по миниатюрам
+    thumbs.querySelectorAll("img").forEach(img => {
+      img.addEventListener("click", () => {
+        showImage(parseInt(img.dataset.index));
+      });
+    });
+  }
+
   showImage(0);
   $("#dialogCategory").textContent = cats[moto.category] || moto.category;
   $("#dialogName").textContent = "Motoland " + moto.name;
@@ -85,13 +101,34 @@ function showImage(index) {
   if (!images.length) return;
   if (index < 0) index = images.length - 1;
   if (index >= images.length) index = 0;
-  state.currentImageIndex = index;
+  
+  // Плавный Fade переход
   const img = $("#dialogImage");
-  img.src = images[index];
-  img.onerror = () => { img.onerror = null; img.src = fallbackImage; };
-  img.alt = "Motoland " + (state.selected ? state.selected.name : "");
-  const dots = $("#dialogDots");
-  dots.innerHTML = images.map((_, i) => `<span class="${i === index ? 'active' : ''}" data-index="${i}"></span>`).join("");
+  img.style.opacity = 0;
+  
+  setTimeout(() => {
+    state.currentImageIndex = index;
+    img.src = images[index];
+    img.onerror = () => { img.onerror = null; img.src = fallbackImage; };
+    img.alt = "Motoland " + (state.selected ? state.selected.name : "");
+    img.style.opacity = 1;
+    
+    const dots = $("#dialogDots");
+    dots.innerHTML = images.map((_, i) => `<span class="${i === index ? 'active' : ''}" data-index="${i}"></span>`).join("");
+    
+    // Подсветка активной миниатюры
+    const thumbs = $("#dialogThumbs");
+    if (thumbs) {
+      thumbs.querySelectorAll("img").forEach(thumb => {
+        if (parseInt(thumb.dataset.index) === index) {
+          thumb.classList.add("active");
+          thumb.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+        } else {
+          thumb.classList.remove("active");
+        }
+      });
+    }
+  }, 150);
 }
 
 // Анимация заголовка
@@ -165,12 +202,13 @@ async function submitReview(event) {
   const form = event.currentTarget;
   const data = Object.fromEntries(new FormData(form));
   if (!data.name.trim() || !data.text.trim() || !data.rating) {
-    alert('Заполните все поля');
+    alert('Заполните все поля и выберите оценку звезд');
     return;
   }
   try {
     await api('/api/reviews', { method: 'POST', body: JSON.stringify(data) });
     form.reset();
+    document.querySelectorAll("#starRatingSelect span").forEach(s => s.classList.remove("selected"));
     showReviewForm(false);
     alert('Спасибо! Ваш отзыв отправлен на модерацию.');
   } catch (e) {
@@ -183,7 +221,13 @@ function initReviews() {
   const closeBtn = document.getElementById('closeReviewForm');
   const form = document.getElementById('reviewForm');
   if (openBtn) openBtn.addEventListener('click', () => showReviewForm(true));
-  if (closeBtn) closeBtn.addEventListener('click', () => showReviewForm(false));
+  if (closeBtn) closeBtn.addEventListener('click', () => {
+    showReviewForm(false);
+    form.reset();
+    document.querySelectorAll("#starRatingSelect span").forEach(s => s.classList.remove("selected"));
+    const ratingInput = document.getElementById("reviewRatingVal");
+    if (ratingInput) ratingInput.value = "";
+  });
   if (form) form.addEventListener('submit', submitReview);
 }
 
@@ -241,6 +285,80 @@ $("#leadForm").addEventListener("submit", async (event) => {
   }
 });
 
+// ---- Новые интерактивные функции ----
+function initHeaderScroll() {
+  const header = $(".site-header");
+  if (!header) return;
+  const toggleHeaderClass = () => {
+    if (window.scrollY > 50) {
+      header.classList.add("scrolled");
+    } else {
+      header.classList.remove("scrolled");
+    }
+  };
+  window.addEventListener("scroll", toggleHeaderClass);
+  toggleHeaderClass();
+}
+
+function initScrollSpy() {
+  const sections = document.querySelectorAll("section[id], header[id], main[id]");
+  const navLinks = document.querySelectorAll("nav a");
+  if (!sections.length || !navLinks.length) return;
+
+  window.addEventListener("scroll", () => {
+    let currentId = "";
+    const scrollPos = window.scrollY + 120; // Смещение для учета высоты хедера
+
+    sections.forEach((section) => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+        currentId = section.getAttribute("id");
+      }
+    });
+
+    if (currentId) {
+      navLinks.forEach((link) => {
+        link.classList.remove("active");
+        if (link.getAttribute("href") === `#${currentId}`) {
+          link.classList.add("active");
+        }
+      });
+    }
+  });
+}
+
+function initFaqAccordion() {
+  const faqItems = document.querySelectorAll(".faq-item");
+  faqItems.forEach((item) => {
+    const question = item.querySelector(".faq-question");
+    const answer = item.querySelector(".faq-answer");
+    if (!question || !answer) return;
+
+    question.addEventListener("click", () => {
+      const isActive = item.classList.contains("active");
+
+      // Закрываем другие элементы аккордеона
+      faqItems.forEach((otherItem) => {
+        if (otherItem !== item) {
+          otherItem.classList.remove("active");
+          const otherAnswer = otherItem.querySelector(".faq-answer");
+          if (otherAnswer) otherAnswer.style.maxHeight = null;
+        }
+      });
+
+      // Переключаем текущий элемент
+      if (isActive) {
+        item.classList.remove("active");
+        answer.style.maxHeight = null;
+      } else {
+        item.classList.add("active");
+        answer.style.maxHeight = answer.scrollHeight + "px";
+      }
+    });
+  });
+}
+
 // ---- Загрузка данных ----
 (async () => {
   try {
@@ -250,6 +368,143 @@ $("#leadForm").addEventListener("submit", async (event) => {
     animateHeadline();
     await loadReviews();
     initReviews();
+    
+    // Инициализация новой интерактивной логики
+    initHeaderScroll();
+    initScrollSpy();
+    initFaqAccordion();
+  } catch (e) {
+    console.error(e);
+  }
+})();
+
+// ---- Новые интерактивные функции (Калькулятор, Reveal, Звезды) ----
+function setupCalculator() {
+  const calcSelect = $("#calcModelSelect");
+  if (!calcSelect) return;
+  
+  calcSelect.innerHTML = state.motos.map(m => `<option value="${m.id}" data-price="${m.price}">${m.name} (${money(m.price)})</option>`).join("");
+  
+  const depositInput = $("#calcDeposit");
+  const termInput = $("#calcTerm");
+  
+  const updateCalculator = () => {
+    const selectedOption = calcSelect.options[calcSelect.selectedIndex];
+    if (!selectedOption) return;
+    const price = Number(selectedOption.dataset.price);
+    
+    depositInput.max = price;
+    if (Number(depositInput.value) > price) depositInput.value = price;
+    
+    $("#calcDepositVal").textContent = Number(depositInput.value).toLocaleString("ru-RU");
+    $("#calcTermVal").textContent = termInput.value;
+    
+    const deposit = Number(depositInput.value);
+    const term = Number(termInput.value);
+    const principal = price - deposit;
+    
+    let monthly = 0;
+    if (principal > 0) {
+      const annualRate = 0.099; // 9.9%
+      const monthlyRate = annualRate / 12;
+      monthly = principal * (monthlyRate * Math.pow(1 + monthlyRate, term)) / (Math.pow(1 + monthlyRate, term) - 1);
+    }
+    
+    $("#calcMonthlyPayment").textContent = money(Math.round(monthly));
+  };
+  
+  calcSelect.addEventListener("change", updateCalculator);
+  depositInput.addEventListener("input", updateCalculator);
+  termInput.addEventListener("input", updateCalculator);
+  
+  $("#calcSubmit").addEventListener("click", () => {
+    const selectedOption = calcSelect.options[calcSelect.selectedIndex];
+    if (!selectedOption) return;
+    
+    const modelName = `Motoland ${selectedOption.text.split(" (")[0]}`;
+    $("#modelSelect").value = modelName;
+    
+    const term = termInput.value;
+    const deposit = Number(depositInput.value).toLocaleString("ru-RU") + " ₽";
+    const commentArea = document.querySelector('textarea[name="message"]');
+    if (commentArea) {
+      commentArea.value = `Интересует кредит. Условия: Срок ${term} мес., Взнос: ${deposit}.`;
+    }
+    
+    const typeSelect = document.querySelector('select[name="type"]');
+    if (typeSelect) typeSelect.value = "Кредит";
+    
+    $("#contact").scrollIntoView({ behavior: "smooth" });
+  });
+  
+  updateCalculator();
+}
+
+function initScrollReveal() {
+  const targets = document.querySelectorAll(
+    ".advantage-card, .catalog-grid, .section-top, .split, .service-list article, .finance-grid, .calculator-wrapper, .showroom-grid, .faq-grid, .contact, .review-card"
+  );
+  
+  targets.forEach(el => el.classList.add("reveal"));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("active");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+  targets.forEach((el) => observer.observe(el));
+}
+
+function initStarRating() {
+  const stars = document.querySelectorAll("#starRatingSelect span");
+  const hiddenInput = $("#reviewRatingVal");
+  if (!stars.length || !hiddenInput) return;
+  
+  stars.forEach((star) => {
+    star.addEventListener("mouseover", () => {
+      const val = Number(star.dataset.star);
+      stars.forEach(s => {
+        if (Number(s.dataset.star) <= val) s.classList.add("hover");
+        else s.classList.remove("hover");
+      });
+    });
+    
+    star.addEventListener("mouseout", () => {
+      stars.forEach(s => s.classList.remove("hover"));
+    });
+    
+    star.addEventListener("click", () => {
+      const val = Number(star.dataset.star);
+      hiddenInput.value = val;
+      stars.forEach(s => {
+        if (Number(s.dataset.star) <= val) s.classList.add("selected");
+        else s.classList.remove("selected");
+      });
+    });
+  });
+}
+
+// ---- Загрузка данных ----
+(async () => {
+  try {
+    state.motos = await api("/api/motos");
+    renderCatalog();
+    setupPhoneMask();
+    animateHeadline();
+    await loadReviews();
+    initReviews();
+    
+    // Инициализация новой интерактивной логики
+    initHeaderScroll();
+    initScrollSpy();
+    initFaqAccordion();
+    setupCalculator();
+    initScrollReveal();
+    initStarRating();
   } catch (e) {
     console.error(e);
   }

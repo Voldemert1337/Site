@@ -29,6 +29,13 @@ button, input, select, textarea { font: inherit; }
 button { cursor: pointer; }
 img { display: block; max-width: 100%; }
 
+.container {
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
 .site-header {
   position: fixed;
   top: 0;
@@ -40,9 +47,34 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(8,8,8,0.84);
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: transparent;
+  backdrop-filter: none;
+  border-bottom: 1px solid transparent;
+  transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s ease;
+}
+.site-header.scrolled {
+  background: rgba(8, 8, 8, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(227, 6, 19, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+nav a.active {
+  color: var(--red);
+  position: relative;
+}
+nav a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--red);
+  box-shadow: 0 0 8px var(--red);
+  border-radius: 2px;
 }
 .brand {
   font-family: 'Playfair Display', serif;
@@ -320,7 +352,7 @@ nav a:hover { color: var(--red); }
 .catalog-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 3px;
+  gap: 28px;
 }
 .card {
   background: var(--panel);
@@ -411,6 +443,9 @@ nav a:hover { color: var(--red); }
   gap: 44px;
   background: var(--panel);
   border-radius: var(--radius);
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
 }
 .service-list {
   display: grid;
@@ -435,7 +470,7 @@ nav a:hover { color: var(--red); }
 .finance-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 3px;
+  gap: 24px;
   margin-top: 30px;
 }
 .finance-grid strong {
@@ -448,8 +483,9 @@ nav a:hover { color: var(--red); }
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
   gap: 50px;
-  background: var(--panel);
-  border-radius: var(--radius);
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
 }
 .lead-form {
   display: grid;
@@ -542,11 +578,14 @@ dialog::backdrop {
   position: relative;
   background: #000;
   overflow: hidden;
-  border-radius: var(--radius) 0 0 var(--radius);
 }
 .dialog-gallery img {
   width: 100%;
   height: 440px;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.15s ease-in-out;
+}
   object-fit: cover;
   display: block;
   transition: opacity 0.4s ease;
@@ -742,5 +781,520 @@ dialog::backdrop {
   }
   .review-form-wrapper {
     padding: 20px;
+  }
+}
+
+/* Фоновые анимированные сферы в Hero */
+.glow-blob {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.18;
+  z-index: 1;
+  pointer-events: none;
+}
+.blob-1 {
+  background: var(--red);
+  top: -10%;
+  left: 10%;
+  animation: floatBlob1 20s infinite alternate ease-in-out;
+}
+.blob-2 {
+  background: #ff5555;
+  bottom: 10%;
+  right: 15%;
+  animation: floatBlob2 25s infinite alternate ease-in-out;
+}
+@keyframes floatBlob1 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(100px, 80px) scale(1.15); }
+  100% { transform: translate(-50px, 150px) scale(0.95); }
+}
+@keyframes floatBlob2 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-120px, -60px) scale(0.9); }
+  100% { transform: translate(60px, -120px) scale(1.15); }
+}
+
+/* Индикатор скролла */
+.scroll-indicator {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  z-index: 2;
+  pointer-events: none;
+  animation: fadeInScroll 1.5s ease-out 1s both;
+}
+.scroll-indicator .mouse {
+  width: 24px;
+  height: 38px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+.scroll-indicator .wheel {
+  width: 3px;
+  height: 8px;
+  background: var(--red);
+  border-radius: 2px;
+  animation: scrollWheel 1.6s infinite ease-in-out;
+}
+@keyframes scrollWheel {
+  0% { opacity: 0; transform: translateY(-4px); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(6px); }
+}
+@keyframes fadeInScroll {
+  from { opacity: 0; transform: translate(-50%, 15px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* Секция преимуществ */
+.advantages {
+  background: #080808;
+  padding: 100px clamp(18px, 6vw, 76px) 60px;
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+.advantages-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.advantage-card {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0;
+  padding: 40px 28px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+.advantage-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--red);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 10px var(--red);
+}
+.advantage-card:hover::after {
+  width: 100%;
+}
+.advantage-card:hover {
+  background: rgba(255, 255, 255, 0.01);
+  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+.advantage-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--red);
+  margin-bottom: 24px;
+  opacity: 0.85;
+  letter-spacing: -2px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+.advantage-card:hover .advantage-number {
+  transform: translateY(-4px);
+  color: #fff;
+  opacity: 1;
+}
+.advantage-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 21px;
+  margin: 0 0 12px 0;
+  font-weight: 700;
+  color: #fff;
+}
+.advantage-card p {
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* Секция Шоурума */
+.showroom {
+  background: #080808;
+}
+.showroom-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 50px;
+  align-items: center;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.showroom-image-wrapper {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.showroom-image-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent, rgba(8,8,8,0.3));
+}
+.showroom-image {
+  width: 100%;
+  height: 480px;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.showroom-image-wrapper:hover .showroom-image {
+  transform: scale(1.03);
+}
+.showroom-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.showroom-lead {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 0 0 10px 0;
+}
+.showroom-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.detail-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.detail-icon {
+  font-size: 24px;
+  background: rgba(227, 6, 19, 0.1);
+  color: var(--red);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(227, 6, 19, 0.2);
+  flex-shrink: 0;
+}
+.detail-item h4 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 0 0 4px 0;
+  color: #fff;
+  font-weight: 700;
+}
+.detail-item p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.hover-red {
+  transition: color 0.2s ease;
+}
+.hover-red:hover {
+  color: var(--red);
+}
+
+/* Секция FAQ */
+.faq {
+  background: transparent;
+}
+.faq-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 50px;
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+}
+.faq-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.faq-item {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+.faq-item.active {
+  border-color: rgba(227, 6, 19, 0.3);
+}
+.faq-question {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #fff;
+  text-align: left;
+  padding: 22px 28px;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-family: 'Inter', sans-serif;
+}
+.faq-question:hover {
+  color: var(--red);
+}
+.faq-toggle {
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--muted);
+  transition: transform 0.3s ease, color 0.2s ease;
+}
+.faq-item.active .faq-toggle {
+  transform: rotate(45deg);
+  color: var(--red);
+}
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.faq-answer p {
+  margin: 0;
+  padding: 0 28px 22px 28px;
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 14.5px;
+}
+
+@media (max-width: 940px) {
+  .advantages-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .showroom-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .showroom-image {
+    height: 350px;
+  }
+  .faq-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+@media (max-width: 620px) {
+  .advantages-grid {
+    grid-template-columns: 1fr;
+  }
+  .advantages {
+    padding: 60px 18px;
+  }
+}
+
+/* Калькулятор */
+.calculator-wrapper {
+  margin-top: 50px;
+}
+.calc-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 40px;
+}
+.calc-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  margin: 0 0 30px 0;
+}
+.calc-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+}
+.calc-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.calc-inputs label {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.range-value {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--line);
+  border: none;
+  border-radius: 2px;
+  outline: none;
+  padding: 0;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--red);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  box-shadow: 0 0 10px rgba(227, 6, 19, 0.5);
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+.calc-result {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.result-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.result-payment {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  color: var(--red);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.calc-disclaimer {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0 0 24px 0;
+}
+
+/* Анимация Scroll Reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Звездный рейтинг в отзыве */
+.star-rating {
+  display: flex;
+  gap: 8px;
+  font-size: 32px;
+  cursor: pointer;
+  color: var(--line);
+  margin-top: 4px;
+}
+.star-rating span {
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+.star-rating span:hover {
+  transform: scale(1.2);
+}
+.star-rating span.hover, .star-rating span.selected {
+  color: var(--red);
+  text-shadow: 0 0 10px rgba(227, 6, 19, 0.4);
+}
+
+/* Галерея с миниатюрами в диалоге */
+.dialog-gallery-wrapper {
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius) 0 0 var(--radius);
+  overflow: hidden;
+}
+.dialog-thumbnails {
+  display: flex;
+  gap: 8px;
+  padding: 14px 20px;
+  background: rgba(0, 0, 0, 0.4);
+  overflow-x: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.dialog-thumbnails img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease, opacity 0.2s ease;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+.dialog-thumbnails img:hover {
+  opacity: 0.9;
+}
+.dialog-thumbnails img.active {
+  border-color: var(--red);
+  opacity: 1;
+}
+
+@media (max-width: 940px) {
+  .calc-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .calc-card {
+    padding: 24px;
+  }
+  .dialog-gallery-wrapper {
+    border-radius: var(--radius) var(--radius) 0 0;
   }
 }

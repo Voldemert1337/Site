@@ -24,6 +24,8 @@
 
   <main id="top">
     <section class="hero">
+      <div class="glow-blob blob-1"></div>
+      <div class="glow-blob blob-2"></div>
       <video class="hero-video" autoplay muted loop playsinline 
              poster="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=2200&q=88"
              onerror="this.style.display='none'">
@@ -53,25 +55,58 @@
           </div>
         </div>
       </div>
+      <div class="scroll-indicator">
+        <div class="mouse">
+          <div class="wheel"></div>
+        </div>
+        <span>Листайте вниз</span>
+      </div>
+    </section>
+
+    <section class="advantages" id="advantages">
+      <div class="advantages-grid">
+        <div class="advantage-card">
+          <div class="advantage-number">01</div>
+          <h3>Официальная гарантия</h3>
+          <p>Предоставляем 2 года гарантии на всю технику и сертифицированное обслуживание.</p>
+        </div>
+        <div class="advantage-card">
+          <div class="advantage-number">02</div>
+          <h3>Быстрый тест-драйв</h3>
+          <p>Запишитесь и пройдите пробную поездку на любой интересующей модели.</p>
+        </div>
+        <div class="advantage-card">
+          <div class="advantage-number">03</div>
+          <h3>Выгодный Trade‑In</h3>
+          <p>Обменяем ваш старый мотоцикл на новый с честной оценкой за 1 час.</p>
+        </div>
+        <div class="advantage-card">
+          <div class="advantage-number">04</div>
+          <h3>Доставка по РФ</h3>
+          <p>Бережная доставка по всей России в специальной жесткой деревянной обрешетке.</p>
+        </div>
+      </div>
     </section>
 
     <section class="section" id="catalog">
-      <div class="section-top">
-        <div>
-          <p class="kicker">Каталог</p>
-          <h2>Популярные <span class="highlight">модели</span></h2>
+      <div class="container">
+        <div class="section-top">
+          <div>
+            <p class="kicker">Каталог</p>
+            <h2>Популярные <span class="highlight">модели</span></h2>
+          </div>
+          <div class="tools">
+            <div class="filters" id="filters"></div>
+            <select id="sort">
+              <option value="default">По умолчанию</option>
+              <option value="price-asc">Сначала дешевле</option>
+              <option value="price-desc">Сначала дороже</option>
+              <option value="name">По названию</option>
+            </select>
+          </div>
         </div>
-        <div class="tools">
-          <div class="filters" id="filters"></div>
-          <select id="sort">
-            <option value="default">По умолчанию</option>
-            <option value="price-asc">Сначала дешевле</option>
-            <option value="price-desc">Сначала дороже</option>
-            <option value="name">По названию</option>
-          </select>
-        </div>
+        <div class="catalog-grid" id="catalogGrid"></div>
       </div>
-      <div class="catalog-grid" id="catalogGrid"></div>
     </section>
 
     <section class="split" id="service">
@@ -87,47 +122,149 @@
     </section>
 
     <section class="finance" id="finance">
-      <p class="kicker">Покупка</p>
-      <h2>Кредит, trade‑in и тест‑драйв <span class="highlight">без лишней беготни</span></h2>
-      <div class="finance-grid">
-        <div><strong>15 минут</strong><span>на предварительный расчет кредита</span></div>
-        <div><strong>0 ₽</strong><span>за консультацию и подбор модели</span></div>
-        <div><strong>Trade‑in</strong><span>оценим ваш текущий мотоцикл</span></div>
+      <div class="container">
+        <p class="kicker">Покупка</p>
+        <h2>Кредит, trade‑in и тест‑драйв <span class="highlight">без лишней беготни</span></h2>
+        <div class="finance-grid">
+          <div><strong>15 минут</strong><span>на предварительный расчет кредита</span></div>
+          <div><strong>0 ₽</strong><span>за консультацию и подбор модели</span></div>
+          <div><strong>Trade‑in</strong><span>оценим ваш текущий мотоцикл</span></div>
+        </div>
+
+        <div class="calculator-wrapper">
+          <div class="calc-card">
+            <h3>Рассчитайте условия <span class="highlight">кредита</span></h3>
+            <div class="calc-grid">
+              <div class="calc-inputs">
+                <label>Мотоцикл
+                  <select id="calcModelSelect"></select>
+                </label>
+                <label>Первоначальный взнос
+                  <div class="range-value"><span id="calcDepositVal">0</span> ₽</div>
+                  <input type="range" id="calcDeposit" min="0" max="300000" step="10000" value="50000">
+                </label>
+                <label>Срок кредита
+                  <div class="range-value"><span id="calcTermVal">36</span> мес.</div>
+                  <input type="range" id="calcTerm" min="12" max="60" step="12" value="36">
+                </label>
+              </div>
+              <div class="calc-result">
+                <div class="result-title">Ежемесячный платеж</div>
+                <div class="result-payment" id="calcMonthlyPayment">0 ₽</div>
+                <p class="calc-disclaimer">*Расчет является предварительным. Ставка от 9.9% годовых.</p>
+                <button class="btn primary wide" id="calcSubmit">Оформить этот кредит</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- ОТЗЫВЫ -->
     <section class="reviews" id="reviews">
-      <div class="section-top">
-        <div>
-          <p class="kicker">Отзывы</p>
-          <h2>Что говорят наши <span class="highlight">клиенты</span></h2>
+      <div class="container">
+        <div class="section-top">
+          <div>
+            <p class="kicker">Отзывы</p>
+            <h2>Что говорят наши <span class="highlight">клиенты</span></h2>
+          </div>
+          <button class="btn secondary" id="openReviewForm">Оставить отзыв</button>
         </div>
-        <button class="btn secondary" id="openReviewForm">Оставить отзыв</button>
+        <div class="reviews-grid" id="reviewsGrid"></div>
+        <div class="review-form-wrapper" id="reviewFormWrapper" style="display:none;">
+          <form id="reviewForm" class="review-form">
+            <h3>Оставить отзыв</h3>
+            <label>Ваше имя
+              <input type="text" name="name" placeholder="Например, Иван" required />
+            </label>
+            <label>Оценка
+              <input type="hidden" name="rating" id="reviewRatingVal" required />
+              <div class="star-rating" id="starRatingSelect">
+                <span data-star="1">★</span>
+                <span data-star="2">★</span>
+                <span data-star="3">★</span>
+                <span data-star="4">★</span>
+                <span data-star="5">★</span>
+              </div>
+            </label>
+            <label class="wide">Текст отзыва
+              <textarea name="text" rows="4" placeholder="Поделитесь впечатлениями..." required></textarea>
+            </label>
+            <button class="btn primary wide" type="submit">Отправить на модерацию</button>
+            <button type="button" class="btn secondary wide" id="closeReviewForm">Отмена</button>
+          </form>
+        </div>
       </div>
-      <div class="reviews-grid" id="reviewsGrid"></div>
-      <div class="review-form-wrapper" id="reviewFormWrapper" style="display:none;">
-        <form id="reviewForm" class="review-form">
-          <h3>Оставить отзыв</h3>
-          <label>Ваше имя
-            <input type="text" name="name" placeholder="Например, Иван" required />
-          </label>
-          <label>Оценка (1–5)
-            <select name="rating" required>
-              <option value="">Выберите</option>
-              <option value="5">5 ★</option>
-              <option value="4">4 ★</option>
-              <option value="3">3 ★</option>
-              <option value="2">2 ★</option>
-              <option value="1">1 ★</option>
-            </select>
-          </label>
-          <label class="wide">Текст отзыва
-            <textarea name="text" rows="4" placeholder="Поделитесь впечатлениями..." required></textarea>
-          </label>
-          <button class="btn primary wide" type="submit">Отправить на модерацию</button>
-          <button type="button" class="btn secondary wide" id="closeReviewForm">Отмена</button>
-        </form>
+    </section>
+
+    <section class="section showroom" id="showroom">
+      <div class="showroom-grid">
+        <div class="showroom-image-wrapper">
+          <img src="/uploads/showroom.jpg" alt="Мотосалон MOTOLAND" class="showroom-image" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1200&q=85'">
+        </div>
+        <div class="showroom-info">
+          <p class="kicker">Наш шоурум</p>
+          <h2>Почувствуйте <span class="highlight">мощность</span> лично</h2>
+          <p class="showroom-lead">Приходите в наш современный шоурум. Здесь вы можете вживую оценить любую модель, подобрать профессиональную экипировку и получить консультацию экспертов.</p>
+          <div class="showroom-details">
+            <div class="detail-item">
+              <span class="detail-icon">📍</span>
+              <div>
+                <h4>Адрес</h4>
+                <p>Москва, Мотошоссе, 12</p>
+              </div>
+            </div>
+            <div class="detail-item">
+              <span class="detail-icon">⏰</span>
+              <div>
+                <h4>Режим работы</h4>
+                <p>Ежедневно с 09:00 до 21:00</p>
+              </div>
+            </div>
+            <div class="detail-item">
+              <span class="detail-icon">📞</span>
+              <div>
+                <h4>Контакты</h4>
+                <p><a href="tel:+79001234567" class="hover-red">+7 900 123-45-67</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq" id="faq">
+      <div class="faq-grid">
+        <div class="faq-info">
+          <p class="kicker">FAQ</p>
+          <h2>Часто задаваемые <span class="highlight">вопросы</span></h2>
+        </div>
+        <div class="faq-accordion">
+          <div class="faq-item">
+            <button class="faq-question">Какие документы нужны для оформления кредита? <span class="faq-toggle">+</span></button>
+            <div class="faq-answer">
+              <p>Для оформления кредита потребуется только паспорт РФ и второй документ (водительское удостоверение или СНИЛС). Решение банков занимает не более 15 минут, а первоначальный взнос может составлять 0%.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question">Как записаться на тест-драйв? <span class="faq-toggle">+</span></button>
+            <div class="faq-answer">
+              <p>Вы можете оставить заявку на сайте или позвонить нам. Для тест-драйва вам потребуются водительские права категории «А» (или соответствующий опыт для внедорожных моделей) и базовая защитная экипировка.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question">Есть ли предпродажная подготовка мотоцикла? <span class="faq-toggle">+</span></button>
+            <div class="faq-answer">
+              <p>Да, абсолютно вся техника проходит полную предпродажную подготовку перед выдачей: протяжка всех соединений, замена транспортировочных жидкостей на оригинальные масла, регулировка карбюратора/инжектора и проверка электрики.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question">Как осуществляется доставка в другие регионы? <span class="faq-toggle">+</span></button>
+            <div class="faq-answer">
+              <p>Мы бережно доставляем мотоциклы по всей России. По Москве и области доставка осуществляется собственным транспортом. В регионы отправляем проверенными ТК в специальной жесткой деревянной обрешетке для 100% сохранности.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -156,11 +293,14 @@
   <dialog id="motoDialog">
     <button class="dialog-close" id="closeDialog">×</button>
     <div class="dialog-grid">
-      <div class="dialog-gallery">
-        <img id="dialogImage" alt="" />
-        <button class="gallery-nav prev">‹</button>
-        <button class="gallery-nav next">›</button>
-        <div class="dots" id="dialogDots"></div>
+      <div class="dialog-gallery-wrapper">
+        <div class="dialog-gallery">
+          <img id="dialogImage" alt="" />
+          <button class="gallery-nav prev">‹</button>
+          <button class="gallery-nav next">›</button>
+          <div class="dots" id="dialogDots"></div>
+        </div>
+        <div class="dialog-thumbnails" id="dialogThumbs"></div>
       </div>
       <div>
         <p class="kicker" id="dialogCategory"></p>
